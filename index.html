@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vision 2047 | Geological Survey of India</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f5f7fa;
+    color: #1f2937;
+  }
+
+  header {
+    background: #0f172a;
+    color: #fff;
+    padding: 24px;
+  }
+
+  section {
+    padding: 24px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px;
+    border-left: 6px solid #cbd5f5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .icon {
+    font-size: 26px;
+  }
+
+  .timeline p {
+    margin: 6px 0;
+    font-size: 14px;
+  }
+
+  /* Tooltip */
+  .tip {
+    border-bottom: 1px dotted #374151;
+    cursor: help;
+    position: relative;
+  }
+
+  .tip:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    background: #111827;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    top: 22px;
+    left: 0;
+    z-index: 10;
+  }
+
+  /* Pillar colors */
+  .p1 { border-color: #92400e; }
+  .p2 { border-color: #1d4ed8; }
+  .p3 { border-color: #15803d; }
+  .p4 { border-color: #6d28d9; }
+  .p5 { border-color: #0f766e; }
+  .p6 { border-color: #b45309; }
+  .p7 { border-color: #334155; }
+
+  /* Slider */
+  .slider-box {
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .slider-box label {
+    font-weight: bold;
+  }
+
+  footer {
+    background: #e5e7eb;
+    padding: 16px;
+    font-size: 14px;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Vision 2047 – Geological Survey of India</h1>
+  <p>Interactive strategic roadmap with programs and timelines.</p>
+</header>
+
+<section>
+
+  <!-- Time Slider -->
+  <div class="slider-box">
+    <label for="timeRange">Show goals up to:</label>
+    <input type="range" id="timeRange" min="5" max="2047" step="5" value="5"
+           oninput="filterTimeline(this.value)">
+    <span id="rangeValue">0–5 Years</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- Pillar 1 -->
+    <div class="card p1">
+      <div class="icon">🪨</div>
+      <h3>Economic Geology & Critical Minerals</h3>
+      <div class="timeline">
+        <p class="t5">
+          <strong>0–5:</strong>
+          <span class="tip" data-tip="National Geophysical Mapping Programme">NGPM</span>,
+          <span class="tip" data-tip="National Aero-Geophysical Mapping Programme">NAGMP</span>,
+          EM surveys
+        </p>
+        <p class="t10">
+          <strong>0–10:</strong>
+          <span class="tip" data-tip="Pan-India Mineral System Mapping initiative">Mineral System Mapping</span>
+        </p>
+        <p class="t2047">
+          <strong>2047:</strong>
+          3D/4D Map of India,
+          <span class="tip" data-tip="Magnetotelluric Imaging of Indian Lithosphere">IndMAP</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Pillar 2 -->
+    <div class="card p2">
+      <div class="icon">🤖</div>
+      <h3>Technology-Driven Transformation</h3>
+      <div class="timeline">
+        <p class="t5">
+          <strong>0–5:</strong>
+          DPIIC,
+          <span class="tip" data-tip="Graphics Processing Unit based compute facility">GPU Compute</span>,
+          AI targeting
+        </p>
+        <p class="t10">
+          <strong>0–10:</strong>
+          Big Data, Cloud infrastructure
+        </p>
+        <p class="t2047">
+          <strong>2047:</strong>
+          Robotics and automation in surveys
+        </p>
+      </div>
+    </div>
+
+    <!-- Pillar 4 (example with IndPROBE) -->
+    <div class="card p4">
+      <div class="icon">🌐</div>
+      <h3>Global Benchmarking & Partnerships</h3>
+      <div class="timeline">
+        <p class="t5">
+          <strong>0–5:</strong>
+          Joint programs with US, Australia, Canada
+        </p>
+        <p class="t10">
+          <strong>0–10:</strong>
+          Global Geoscience Conclave
+        </p>
+        <p class="t2047">
+          <strong>2047:</strong>
+          <span class="tip" data-tip="Deep lithospheric investigation of Indian plate">
+            IndPROBE
+          </span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  Source: Vision 2047 – Geological Survey of India.
+</footer>
+
+<script>
+function filterTimeline(value) {
+  document.getElementById("rangeValue").innerText =
+    value == 5 ? "0–5 Years" :
+    value == 10 ? "0–10 Years" :
+    "Up to 2047";
+
+  document.querySelectorAll(".t5,.t10,.t2047").forEach(el => {
+    el.style.display = "none";
+  });
+
+  document.querySelectorAll(".t5").forEach(el => el.style.display = "block");
+
+  if (value >= 10) {
+    document.querySelectorAll(".t10").forEach(el => el.style.display = "block");
+  }
+
+  if (value >= 2047) {
+    document.querySelectorAll(".t2047").forEach(el => el.style.display = "block");
+  }
+}
+</script>
+
+</body>
+</html>
