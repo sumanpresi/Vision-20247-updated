@@ -1,1 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GSI Vision 2047 – Interactive Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Simple, dependency-light dashboard using Tabulator + Chart.js (via CDN) -->
+  <link href="https://unpkg.com/tabulator-tables@5.6.0/dist/css/tabulator.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/tabulator-tables@5.6.0/dist/js/tabulator.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-alt: #151b30;
+      --card: #1f2640;
+      --accent: #00bcd4;
+      --accent-soft: rgba(0,188,212,0.15);
+      --text: #f5f7ff;
+      --text-muted: #b0b7d9;
+      --border: #2c3555;
+      --danger: #ff5252;
+      --warning: #ffc107;
+      --success: #4caf50;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #17223c 0, #050814 55%, #01030a 100%);
+      color: var(--text);
+    }
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to right, rgba(5,8,20,0.88), rgba(5,8,20,0.9));
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.03em;
+    }
+    header p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    #container {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 12px;
+      padding: 12px;
+    }
+    @media (max-width: 900px) {
+      #container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .panel {
+      background: linear-gradient(145deg, rgba(15,22,45,0.96), rgba(10,14,30,0.98));
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px 14px 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+    }
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: 0.15s all ease-out;
+      background: rgba(8,12,28,0.9);
+    }
+    .pill.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+    .tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+    select, input[type="search"] {
+      width: 100%;
+      padding: 6px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(8,10,22,0.95);
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
+    select:focus, input[type="search"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0,188,212,0.35);
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      margin-bottom: 3px;
+    }
+    #main {
+      display: grid;
+      grid-template-rows: auto auto minmax(200px, 1fr);
+      gap: 12px;
+    }
+    .grid-row {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr;
+      gap: 12px;
+    }
+    @media (max-width: 1100px) {
+      .grid-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+    }
+    .kpi {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: radial-gradient(circle at top left, rgba(0,188,212,0.22), rgba(15,20,40,0.95));
+      border: 1px solid rgba(0,188,212,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi small {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+    .kpi-value {
+      font-size: 18px;
+      margin-top: 2px;
+    }
+    .kpi-pill {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(4,10,24,0.9);
+      border: 1px solid rgba(0,188,212,0.5);
+      color: var(--accent);
+    }
+    .kpi-mini {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .panel-footer {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0.85;
+    }
+    .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 9px;
+      font-size: 11px;
+      background: rgba(5,10,24,0.95);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.15s all ease-out;
+    }
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    #timelineChart, #pillarChart {
+      width: 100%;
+      height: 240px;
+    }
+    #table {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: rgba(4,6,14,0.9);
+    }
+    .tabulator {
+      background: transparent;
+      color: var(--text);
+      font-size: 11px;
+    }
+    .tabulator .tabulator-header {
+      background: rgba(10,14,30,0.98);
+      border-bottom: 1px solid var(--border);
+    }
+    .tabulator .tabulator-col {
+      background: transparent;
+      border-right: 1px solid rgba(255,255,255,0.04);
+    }
+    .tabulator .tabulator-row {
+      background: rgba(5,8,18,0.96);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .tabulator .tabulator-row:nth-child(even) {
+      background: rgba(10,13,24,0.96);
+    }
+    .tabulator .tabulator-row.tabulator-selected {
+      background: rgba(0,188,212,0.22);
+    }
+    .tabulator .tabulator-cell {
+      border-right: 1px solid rgba(255,255,255,0.03);
+    }
+    .badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+    .badge-short { background: rgba(33,150,243,0.12); color: #90caf9; }
+    .badge-medium { background: rgba(255,193,7,0.14); color: #ffe082; }
+    .badge-long { background: rgba(76,175,80,0.13); color: #a5d6a7; }
+    .badge-2047 { background: rgba(255,82,82,0.12); color: #ffab91; }
+    .badge-pillar {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+    }
+    .flex {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .flex-space {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>GSI Vision 2047 – Strategic Roadmap Dashboard</h1>
+    <p>Interactive view of pillars, timeframes, and actions derived from “Vision 2047 Geological Survey of India – Strategic Roadmap for National Leadership in Geoscience”. [file:1]</p>
+  </div>
+  <div style="text-align:right;">
+    <p>Use filters to slice by Pillar, Vision‑2047 pillar of GoI, timeframe, domain, and programme tags. [file:1]</p>
+  </div>
+</header>
+
+<div id="container">
+  <!-- FILTERS / LEFT PANEL -->
+  <aside class="panel">
+    <h2>Filters</h2>
+    <div class="subtext">Click to focus on a specific strategic pillar or theme. [file:1]</div>
+
+    <h3>Pillars (1–7)</h3>
+    <div class="pill-row" id="pillarPills">
+      <!-- Filled by JS -->
+    </div>
+
+    <label for="visionPillar">Vision‑2047 pillar of GoI</label>
+    <select id="visionPillar">
+      <option value="">All</option>
+      <option value="Economic Competitiveness">Economic Competitiveness</option>
+      <option value="Strong National Security">Strong National Security</option>
+      <option value="Secure Global Partnerships and Alliances">Secure Global Partnerships and Alliances</option>
+      <option value="Strong Legal Foundations">Strong Legal Foundations</option>
+    </select>
+
+    <label for="timeframeFilter">Timeframe</label>
+    <select id="timeframeFilter">
+      <option value="">All</option>
+      <option value="Short">Short term (0–5 yrs)</option>
+      <option value="Medium">Medium term (0–10 yrs)</option>
+      <option value="Long">Long term (0–15 yrs)</option>
+      <option value="2047">2047 target</option>
+    </select>
+
+    <label for="domainFilter">Domain tag</label>
+    <select id="domainFilter">
+      <option value="">All</option>
+      <option value="Critical minerals">Critical minerals</option>
+      <option value="Geohazards">Geohazards / Landslides / GLOF</option>
+      <option value="Energy transition">Energy transition / CCUS</option>
+      <option value="Data & IT">Data & IT / NGDR / FAIR / AI</option>
+      <option value="Training & HR">Training & HR / GSITI</option>
+      <option value="Policy">Policy & governance</option>
+      <option value="Geoheritage & Museums">Geoheritage & Museums</option>
+      <option value="Planetary & Astro">Planetary / Astrogeology / Meteorites</option>
+    </select>
+
+    <label for="typeFilter">Action type</label>
+    <select id="typeFilter">
+      <option value="">All</option>
+      <option value="Survey/Mapping">Survey / Mapping</option>
+      <option value="Exploration">Exploration</option>
+      <option value="R&D">R&amp;D</option>
+      <option value="Capacity building">Capacity building / Training</option>
+      <option value="IT/Data">IT / Data infrastructure</option>
+      <option value="Public engagement">Public engagement / Outreach</option>
+      <option value="Policy">Policy / Strategy</option>
+      <option value="International cooperation">International cooperation</option>
+    </select>
+
+    <label for="programmeFilter">Programme tag</label>
+    <select id="programmeFilter">
+      <option value="">All</option>
+      <option value="NGPM">NGPM</option>
+      <option value="NAGMP">NAGMP</option>
+      <option value="IndPROBE">IndPROBE</option>
+      <option value="IndMAP">IndMAP</option>
+      <option value="NGDR">NGDR</option>
+      <option value="GSITI">GSITI</option>
+      <option value="CCUS">CCUS</option>
+      <option value="Geoethics Charter">Geoethics Charter</option>
+      <option value="IndiaAI-Geoscience">IndiaAI‑Geoscience Hackathon</option>
+    </select>
+
+    <label for="searchBox">Search in action points</label>
+    <input id="searchBox" type="search" placeholder="Search text in action description…" />
+
+    <div class="panel-footer">
+      <span>Filters combine with AND logic.</span>
+      <button class="btn" id="resetFiltersBtn">Reset</button>
+    </div>
+  </aside>
+
+  <!-- MAIN DASHBOARD -->
+  <main id="main">
+    <!-- KPI ROW -->
+    <section class="panel">
+      <div class="flex-space">
+        <div>
+          <h2>At a glance</h2>
+          <div class="subtext">Counts update live based on filters and mirror the structure of the Vision‑2047 action framework. [file:1]</div>
+        </div>
+        <button class="btn" id="exportBtn">Export filtered table (CSV)</button>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-pill">All pillars</div>
+          <small>Total actions</small>
+          <div class="kpi-value" id="kpiTotal">–</div>
+          <div class="kpi-mini">Rows in filtered dataset</div>
+        </div>
+        <div class="kpi">
+          <small>Short term (0–5 yrs)</small>
+          <div class="kpi-value" id="kpiShort">–</div>
+          <div class="kpi-mini">Immediate priorities (e.g., NGPM, NAGMP Phase‑II, CCUS pilots, landslide forecasting rollout, NGDR upload etc.). [file:1]</div>
+        </div>
+        <div class="kpi">
+          <small>Medium (0–10 yrs)</small>
+          <div class="kpi-value" id="kpiMedium">–</div>
+          <div class="kpi-mini">Includes NAGMP Phase‑III, predictive mapping, pollution 3D maps, global conclave, GSITI National Centre etc. [file:1]</div>
+        </div>
+        <div class="kpi">
+          <small>Long / 2047 vision</small>
+          <div class="kpi-value" id="kpiLong">–</div>
+          <div class="kpi-mini">3D/4D India, complete critical mineral prospecting, landslide coverage for all districts, Geo‑Atlas, IndPROBE, global geoscience leadership. [file:1]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHARTS ROW -->
+    <section class="grid-row">
+      <section class="panel">
+        <h2>Timeframe load profile</h2>
+        <div class="subtext">Shows how many actions fall in Short, Medium, Long, and 2047 buckets for the current filter selection. [file:1]</div>
+        <canvas id="timelineChart"></canvas>
+        <div class="panel-footer">
+          <span>Helps balance workload across periods.</span>
+          <span class="tag"><span class="tag-dot"></span> Timeframe distribution</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Actions by pillar</h2>
+        <div class="subtext">Distribution of filtered actions across the 7 GSI strategic pillars. [file:1]</div>
+        <canvas id="pillarChart"></canvas>
+        <div class="panel-footer">
+          <span>Click a pillar pill on the left to isolate it.</span>
+          <span class="tag badge-pillar">1–7 Pillar count</span>
+        </div>
+      </section>
+    </section>
+
+    <!-- TABLE ROW -->
+    <section class="panel" style="display:flex;flex-direction:column;min-height:260px;">
+      <div class="flex-space" style="margin-bottom:6px;">
+        <div>
+          <h2>Action explorer</h2>
+          <div class="subtext">Editable grid of Vision‑2047 action points with tags for pillar, timeframe, domain, and programmes. You can paste or extend rows as needed. [file:1]</div>
+        </div>
+        <div class="flex">
+          <span class="badge badge-short">Short</span>
+          <span class="badge badge-medium">Medium</span>
+          <span class="badge badge-long">Long</span>
+          <span class="badge badge-2047">2047</span>
+        </div>
+      </div>
+      <div id="table"></div>
+      <div class="panel-footer">
+        <span>Tip: Double‑click a cell to edit; use column menu for show/hide or sorting.</span>
+        <span>Built for internal consultation and refinement. [file:2]</span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // --- Sample seed data ---
+  // Replace or extend this array with the full extracted action list from the PDF.
+  // Each object is one action point. [file:1]
+  const initialData = [
+    {
+      id: 1,
+      pillarId: 1,
+      pillarName: "Economic Geology – Critical Mineral Resource Mapping",
+      visionPillar: "Strong National Security",
+      action: "Complete National Geophysical Mapping Programme (NGPM).",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2028,
+      domain: "Critical minerals",
+      type: "Survey/Mapping",
+      programme: "NGPM",
+      priority: "High"
+    },
+    {
+      id: 2,
+      pillarId: 1,
+      pillarName: "Economic Geology – Critical Mineral Resource Mapping",
+      visionPillar: "Strong National Security",
+      action: "Complete National Aero-geophysical Mapping Programme (NAGMP) Phase-II – magnetic, spectrometric.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2030,
+      domain: "Critical minerals",
+      type: "Survey/Mapping",
+      programme: "NAGMP",
+      priority: "High"
+    },
+    {
+      id: 3,
+      pillarId: 1,
+      pillarName: "Economic Geology – Critical Mineral Resource Mapping",
+      visionPillar: "Strong National Security",
+      action: "IndMAP Pan-India magnetotelluric imaging for lithospheric architecture.",
+      timeframeBucket: "Long",
+      startYear: 2025,
+      endYear: 2040,
+      domain: "Critical minerals",
+      type: "Survey/Mapping",
+      programme: "IndMAP",
+      priority: "Medium"
+    },
+    {
+      id: 4,
+      pillarId: 1,
+      pillarName: "Economic Geology – Critical Mineral Resource Mapping",
+      visionPillar: "Strong National Security",
+      action: "3D/4D map of India linked to geochronology isotope mapping, IndPROBE, IndMAP, NAGMP – complete identification of prospects for all critical minerals.",
+      timeframeBucket: "2047",
+      startYear: 2035,
+      endYear: 2047,
+      domain: "Critical minerals",
+      type: "Survey/Mapping",
+      programme: "IndPROBE",
+      priority: "High"
+    },
+    {
+      id: 5,
+      pillarId: 2,
+      pillarName: "Technology-Driven Geoscience Transformation",
+      visionPillar: "Secure Global Partnerships and Alliances",
+      action: "Setting up of Data Processing, Interpretation and Integration Centre (DPIIC) as AI/ML-enabled hub.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2030,
+      domain: "Data & IT",
+      type: "IT/Data",
+      programme: "",
+      priority: "High"
+    },
+    {
+      id: 6,
+      pillarId: 2,
+      pillarName: "Technology-Driven Geoscience Transformation",
+      visionPillar: "Secure Global Partnerships and Alliances",
+      action: "IndiaAI-Geoscience Hackathon for mineral targeting and geohazard applications.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2028,
+      domain: "Data & IT",
+      type: "R&D",
+      programme: "IndiaAI-Geoscience",
+      priority: "Medium"
+    },
+    {
+      id: 7,
+      pillarId: 3,
+      pillarName: "Public Good and Fundamental Geoscience",
+      visionPillar: "Secure Global Partnerships and Alliances",
+      action: "Regional landslide forecasting operational in 30 districts and experimental in 12 districts.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2030,
+      domain: "Geohazards",
+      type: "Survey/Mapping",
+      programme: "",
+      priority: "High"
+    },
+    {
+      id: 8,
+      pillarId: 3,
+      pillarName: "Public Good and Fundamental Geoscience",
+      visionPillar: "Secure Global Partnerships and Alliances",
+      action: "Regional landslide forecasting operational in 80 districts and experimental in 40 districts.",
+      timeframeBucket: "Medium",
+      startYear: 2030,
+      endYear: 2035,
+      domain: "Geohazards",
+      type: "Survey/Mapping",
+      programme: "",
+      priority: "High"
+    },
+    {
+      id: 9,
+      pillarId: 3,
+      pillarName: "Public Good and Fundamental Geoscience",
+      visionPillar: "Secure Global Partnerships and Alliances",
+      action: "Regional landslide forecasting operational in all 181 landslide prone districts; debris flow impact models and InSAR monitoring in priority districts; GLOF assessment for 20 glaciers.",
+      timeframeBucket: "2047",
+      startYear: 2035,
+      endYear: 2047,
+      domain: "Geohazards",
+      type: "Survey/Mapping",
+      programme: "",
+      priority: "High"
+    },
+    {
+      id: 10,
+      pillarId: 4,
+      pillarName: "Global Benchmarking and Strategic Partnerships",
+      visionPillar: "Secure Global Partnerships and Alliances",
+      action: "Geoscience partnerships with leading countries (US, Australia, Canada, Russia, Finland, UK, Brazil etc.) for critical minerals, mineral systems, CCUS, hydrogen, 3D/4D mapping, geochronology, IndPROBE.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2030,
+      domain: "International cooperation",
+      type: "International cooperation",
+      programme: "IndPROBE",
+      priority: "Medium"
+    },
+    {
+      id: 11,
+      pillarId: 5,
+      pillarName: "Integrated Data Infrastructure – Open Knowledge Ecosystem",
+      visionPillar: "Strong National Security",
+      action: "National Geoscience Data Repository (NGDR) – upload all legacy geoscience data with API linkages to other repositories; adopt FAIR data principles; LLM-based NGDR applications.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2030,
+      domain: "Data & IT",
+      type: "IT/Data",
+      programme: "NGDR",
+      priority: "High"
+    },
+    {
+      id: 12,
+      pillarId: 5,
+      pillarName: "Integrated Data Infrastructure – Open Knowledge Ecosystem",
+      visionPillar: "Strong National Security",
+      action: "Publish India’s Geoscience Atlas 2047 – integrated geological, geophysical, geochemical, geomorphology, aero-geophysical, magnetotelluric, mineral system, subsurface critical mineral, geochronology and 3D/4D maps of India.",
+      timeframeBucket: "2047",
+      startYear: 2035,
+      endYear: 2047,
+      domain: "Data & IT",
+      type: "Survey/Mapping",
+      programme: "",
+      priority: "High"
+    },
+    {
+      id: 13,
+      pillarId: 6,
+      pillarName: "Training and Capacity Building",
+      visionPillar: "Economic Competitiveness",
+      action: "Launch GSITI degree programme and position GSITI as National Centre of Excellence in Geoscience training and capacity building.",
+      timeframeBucket: "Medium",
+      startYear: 2025,
+      endYear: 2035,
+      domain: "Training & HR",
+      type: "Capacity building",
+      programme: "GSITI",
+      priority: "High"
+    },
+    {
+      id: 14,
+      pillarId: 6,
+      pillarName: "Training and Capacity Building",
+      visionPillar: "Economic Competitiveness",
+      action: "GSITI as Global Centre of Excellence and UNESCO Centre of Excellence recognition; leadership pipelines and global exposure programmes.",
+      timeframeBucket: "Long",
+      startYear: 2030,
+      endYear: 2040,
+      domain: "Training & HR",
+      type: "Capacity building",
+      programme: "GSITI",
+      priority: "Medium"
+    },
+    {
+      id: 15,
+      pillarId: 7,
+      pillarName: "Policy Intervention",
+      visionPillar: "Economic Competitiveness",
+      action: "Draft implementation strategy, set target guidelines, partner with academic and international agencies, align with national missions and global standards.",
+      timeframeBucket: "Short",
+      startYear: 2025,
+      endYear: 2030,
+      domain: "Policy",
+      type: "Policy",
+      programme: "",
+      priority: "High"
+    },
+    {
+      id: 16,
+      pillarId: 7,
+      pillarName: "Policy Intervention",
+      visionPillar: "Economic Competitiveness",
+      action: "Develop GSI as future ready, embed GSI into strategic planning and global policy forums, and become global leader in geoscience.",
+      timeframeBucket: "Long",
+      startYear: 2030,
+      endYear: 2040,
+      domain: "Policy",
+      type: "Policy",
+      programme: "",
+      priority: "High"
+    }
+  ];
+
+  // --- Pillar metadata (for pills and charts) [file:1] ---
+  const pillarMeta = [
+    { id: 1, label: "1. Economic Geology – Critical Minerals" },
+    { id: 2, label: "2. Technology-driven Geoscience" },
+    { id: 3, label: "3. Public Good & Fundamental Geoscience" },
+    { id: 4, label: "4. Global Benchmarking & Partnerships" },
+    { id: 5, label: "5. Integrated Data Infrastructure" },
+    { id: 6, label: "6. Training & Capacity Building" },
+    { id: 7, label: "7. Policy Intervention" }
+  ];
+
+  let currentPillarFilter = null;
+  let table; // Tabulator instance
+  let timelineChart;
+  let pillarChart;
+
+  function buildPillarPills() {
+    const container = document.getElementById("pillarPills");
+    container.innerHTML = "";
+    const allPill = document.createElement("div");
+    allPill.textContent = "All pillars";
+    allPill.className = "pill active";
+    allPill.dataset.pillarId = "";
+    container.appendChild(allPill);
+
+    pillarMeta.forEach(p => {
+      const el = document.createElement("div");
+      el.className = "pill";
+      el.dataset.pillarId = p.id;
+      el.textContent = p.label;
+      container.appendChild(el);
+    });
+
+    container.addEventListener("click", e => {
+      const target = e.target.closest(".pill");
+      if (!target) return;
+      [...container.querySelectorAll(".pill")].forEach(p => p.classList.remove("active"));
+      target.classList.add("active");
+      currentPillarFilter = target.dataset.pillarId ? parseInt(target.dataset.pillarId, 10) : null;
+      applyFilters();
+    });
+  }
+
+  function timeframeFormatter(cell) {
+    const v = cell.getValue();
+    if (!v) return "";
+    let cls = "badge-short";
+    if (v === "Medium") cls = "badge-medium";
+    else if (v === "Long") cls = "badge-long";
+    else if (v === "2047") cls = "badge-2047";
+    return `<span class="badge ${cls}">${v}</span>`;
+  }
+
+  function pillarFormatter(cell) {
+    const v = cell.getValue();
+    return `<span class="badge badge-pillar">${v}</span>`;
+  }
+
+  function buildTable() {
+    table = new Tabulator("#table", {
+      data: initialData,
+      layout: "fitColumns",
+      reactiveData: true,
+      selectable: true,
+      height: "260px",
+      columns: [
+        { title: "ID", field: "id", width: 40, hozAlign: "center" },
+        { title: "Pillar", field: "pillarName", headerFilter: "input", formatter: pillarFormatter },
+        { title: "Vision‑2047 pillar (GoI)", field: "visionPillar", headerFilter: "input" },
+        { title: "Action point", field: "action", headerFilter: "input", widthGrow: 2 },
+        { title: "Timeframe", field: "timeframeBucket", width: 110, formatter: timeframeFormatter },
+        { title: "Start", field: "startYear", width: 60 },
+        { title: "End", field: "endYear", width: 60 },
+        { title: "Domain", field: "domain", headerFilter: "input" },
+        { title: "Type", field: "type", headerFilter: "input" },
+        { title: "Programme", field: "programme", headerFilter: "input" },
+        { title: "Priority", field: "priority", width: 70, editor: "select", editorParams: { values: ["High", "Medium", "Low"] } }
+      ],
+      cellEdited: updateKPIsAndCharts
+    });
+  }
+
+  function getFilteredData() {
+    let data = table.getData();
+
+    const vision = document.getElementById("visionPillar").value;
+    const timeframe = document.getElementById("timeframeFilter").value;
+    const domain = document.getElementById("domainFilter").value;
+    const type = document.getElementById("typeFilter").value;
+    const programme = document.getElementById("programmeFilter").value;
+    const searchText = document.getElementById("searchBox").value.trim().toLowerCase();
+
+    return data.filter(row => {
+      if (currentPillarFilter && row.pillarId !== currentPillarFilter) return false;
+      if (vision && row.visionPillar !== vision) return false;
+      if (timeframe && row.timeframeBucket !== timeframe) return false;
+      if (domain && row.domain !== domain) return false;
+      if (type && row.type !== type) return false;
+      if (programme && row.programme !== programme) return false;
+      if (searchText && !row.action.toLowerCase().includes(searchText)) return false;
+      return true;
+    });
+  }
+
+  function updateKPIsAndCharts() {
+    const rows = getFilteredData();
+    const total = rows.length;
+    const short = rows.filter(r => r.timeframeBucket === "Short").length;
+    const medium = rows.filter(r => r.timeframeBucket === "Medium").length;
+    const long = rows.filter(r => r.timeframeBucket === "Long").length;
+    const t2047 = rows.filter(r => r.timeframeBucket === "2047").length;
+
+    document.getElementById("kpiTotal").textContent = total;
+    document.getElementById("kpiShort").textContent = short;
+    document.getElementById("kpiMedium").textContent = medium;
+    document.getElementById("kpiLong").textContent = long + t2047;
+
+    const tfData = [short, medium, long, t2047];
+    const tfLabels = ["Short", "Medium", "Long", "2047"];
+    const tfColors = [
+      "rgba(33,150,243,0.7)",
+      "rgba(255,193,7,0.8)",
+      "rgba(76,175,80,0.8)",
+      "rgba(255,82,82,0.85)"
+    ];
+
+    if (!timelineChart) {
+      const ctx = document.getElementById("timelineChart").getContext("2d");
+      timelineChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: tfLabels,
+          datasets: [{
+            label: "Actions",
+            data: tfData,
+            backgroundColor: tfColors,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ctx.parsed.y + " actions"
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: "#b0b7d9", font: { size: 11 } },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { color: "#b0b7d9", precision: 0 },
+              grid: { color: "rgba(176,183,217,0.1)" }
+            }
+          }
+        }
+      });
+    } else {
+      timelineChart.data.datasets[0].data = tfData;
+      timelineChart.update();
+    }
+
+    const pillarCounts = pillarMeta.map(p => rows.filter(r => r.pillarId === p.id).length);
+    const pLabels = pillarMeta.map(p => p.id.toString());
+    const pColors = pillarMeta.map(p =>
+      currentPillarFilter === p.id
+        ? "rgba(0,188,212,0.9)"
+        : "rgba(0,188,212,0.35)"
+    );
+
+    if (!pillarChart) {
+      const ctx2 = document.getElementById("pillarChart").getContext("2d");
+      pillarChart = new Chart(ctx2, {
+        type: "radar",
+        data: {
+          labels: pLabels,
+          datasets: [{
+            label: "Actions by pillar",
+            data: pillarCounts,
+            backgroundColor: "rgba(0,188,212,0.22)",
+            borderColor: "rgba(0,188,212,0.9)",
+            borderWidth: 2,
+            pointBackgroundColor: pColors
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: ctx => {
+                  const idx = ctx[0].dataIndex;
+                  return pillarMeta[idx].label;
+                },
+                label: ctx => ctx.parsed.r + " actions"
+              }
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              ticks: { display: false },
+              grid: { color: "rgba(176,183,217,0.18)" },
+              angleLines: { color: "rgba(176,183,217,0.18)" },
+              pointLabels: { color: "#b0b7d9", font: { size: 10 } }
+            }
+          }
+        }
+      });
+    } else {
+      pillarChart.data.datasets[0].data = pillarCounts;
+      pillarChart.data.datasets[0].pointBackgroundColor = pColors;
+      pillarChart.update();
+    }
+  }
+
+  function applyFilters() {
+    // Just recompute KPIs and charts from current table data + UI state.
+    updateKPIsAndCharts();
+  }
+
+  function resetFilters() {
+    document.getElementById("visionPillar").value = "";
+    document.getElementById("timeframeFilter").value = "";
+    document.getElementById("domainFilter").value = "";
+    document.getElementById("typeFilter").value = "";
+    document.getElementById("programmeFilter").value = "";
+    document.getElementById("searchBox").value = "";
+    currentPillarFilter = null;
+
+    const pills = document.querySelectorAll("#pillarPills .pill");
+    pills.forEach(p => p.classList.remove("active"));
+    if (pills[0]) pills[0].classList.add("active");
+
+    applyFilters();
+  }
+
+  function exportCSV() {
+    const rows = getFilteredData();
+    table.download("csv", "gsi-vision-2047-actions-filtered.csv", { bom: true, rowRange: rows });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    buildPillarPills();
+    buildTable();
+
+    ["visionPillar","timeframeFilter","domainFilter","typeFilter","programmeFilter"].forEach(id => {
+      document.getElementById(id).addEventListener("change", applyFilters);
+    });
+
+    document.getElementById("searchBox").addEventListener("input", () => {
+      applyFilters();
+    });
+
+    document.getElementById("resetFiltersBtn").addEventListener("click", resetFilters);
+    document.getElementById("exportBtn").addEventListener("click", exportCSV);
+
+    updateKPIsAndCharts();
+  });
+</script>
+</body>
+</html>
 
