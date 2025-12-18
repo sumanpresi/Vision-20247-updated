@@ -3,102 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simplified GSI Vision 2047 Dashboard</title>
+    <title>GSI Vision 2047 Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .example-box { border-left: 4px solid #10b981; background-color: #f0fdf4; padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; }
+        .pillar-card:hover { transform: translateY(-5px); transition: all 0.3s; }
+        .easy-read { background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; }
+        .example-tag { display: inline-block; background-color: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans leading-relaxed">
+<body class="bg-slate-50 text-slate-900 font-sans">
 
-    <header class="bg-indigo-900 text-white py-12 px-6">
-        <div class="max-w-5xl mx-auto text-center">
-            <h1 class="text-4xl font-extrabold mb-4">GSI Vision 2047: Building a Resilient India</h1>
-            [cite_start]<p class="text-xl text-indigo-200">A simple guide to the Geological Survey of India's 25-year plan[cite: 1, 2].</p>
+    <header class="bg-blue-900 text-white py-10 px-6 shadow-lg">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-2">Vision 2047: Geological Survey of India</h1>
+            <p class="text-xl text-blue-200">Strategic Roadmap for National Leadership in Geoscience</p>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto py-10 px-4">
+    <main class="max-w-7xl mx-auto py-8 px-4">
         
-        <section class="grid md:grid-cols-2 gap-8 mb-16">
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-indigo-100">
-                [cite_start]<h2 class="text-2xl font-bold text-indigo-800 mb-3 italic">The Vision (Our Dream) [cite: 41]</h2>
-                [cite_start]<p class="text-lg text-gray-700">To become a world-class center of science that uses earth knowledge to make India wealthy, safe from natural disasters, and green[cite: 42].</p>
+        <section class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-600">
+                <h2 class="text-2xl font-bold mb-4 flex items-center">
+                    <span class="mr-2">👁️</span> Vision Statement
+                </h2>
+                [cite_start]<p class="italic text-gray-700 mb-4">"To develop into a world-class institution, innovative, and agile multi-disciplinary geoscience institution that empowers India with foundational, objective, and actionable geological knowledge for economic prosperity, environmental resilience, and sustainable socio-economic development." [cite: 42]</p>
+                <div class="easy-read">
+                    <p class="text-sm font-bold text-blue-800">Simplified Vision:</p>
+                    [cite_start]<p class="text-sm">To become a world-leader in Earth science that gives India the exact data it needs to grow rich, stay safe from natural disasters, and protect the environment for everyone. [cite: 42]</p>
+                </div>
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-indigo-100">
-                [cite_start]<h2 class="text-2xl font-bold text-indigo-800 mb-3 italic">The Mission (Our Job) [cite: 43]</h2>
-                [cite_start]<p class="text-lg text-gray-700">To map every inch of India's land, find the minerals we need for the future, predict landslides or floods, and share all this data with the public[cite: 44].</p>
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-600">
+                <h2 class="text-2xl font-bold mb-4 flex items-center">
+                    <span class="mr-2">🚀</span> Mission Statement
+                </h2>
+                [cite_start]<p class="text-gray-700 font-medium mb-4">"To systematically map and characterize India's geological framework; to discover and responsibly quantify the nation's mineral and energy resources (except oil & gas); to assess geohazards and address climate change challenges; and to disseminate geospatial data openly to drive innovation and informed decision-making for all stakeholders." [cite: 44]</p>
+                <div class="easy-read" style="border-left-color: #10b981;">
+                    <p class="text-sm font-bold text-green-800">Simplified Mission:</p>
+                    [cite_start]<p class="text-sm">Our job is to map all of India's land, find new minerals (like Lithium), predict earth-hazards like landslides, and share this information freely with the public and businesses. [cite: 44]</p>
+                </div>
             </div>
         </section>
 
-        [cite_start]<h2 class="text-3xl font-bold text-center mb-10 text-gray-800">The 7 Big Goals [cite: 50]</h2>
-        
-        <div class="space-y-6">
+        <div class="mb-6">
+            <h2 class="text-3xl font-bold mb-6 text-center text-blue-900">The 7 Strategic Pillars</h2>
+            <div class="flex flex-wrap justify-center gap-2 mb-8" id="tab-buttons">
+                <button onclick="showPillar('p1')" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700">1. Economic Geology</button>
+                <button onclick="showPillar('p2')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">2. Tech Transformation</button>
+                <button onclick="showPillar('p3')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">3. Public Good</button>
+                <button onclick="showPillar('p4')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">4. Global Partnerships</button>
+                <button onclick="showPillar('p5')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">5. Data Infrastructure</button>
+                <button onclick="showPillar('p6')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">6. Capacity Building</button>
+                <button onclick="showPillar('p7')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">7. Policy Intervention</button>
+            </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">1. [cite_start]Finding the Building Blocks of Tomorrow [cite: 118]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Finding rare minerals like Lithium and Cobalt deep under the ground or under the sea[cite: 119, 120].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> Finding Lithium in India so we can make our own batteries for electric cars and smartphones instead of buying them from other countries[cite: 35, 121].</p>
+            <div id="p1" class="tab-content active bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">1. Economic Geology & Critical Mineral Resource Mapping</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Focuses on identifying mineral resources essential for energy transition and economic sovereignty. [cite: 118, 119]</p>
+                <div class="easy-read mb-6">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Finding the raw materials India needs to build its own technology so we don't have to rely on other countries. [cite: 119]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Finding enough Lithium in India to make batteries for millions of electric cars. [cite: 121]</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-900 border-b border-blue-200 mb-2">Short Term (0-5 Years)</h4>
+                        <ul class="text-sm space-y-2">
+                            [cite_start]<li>• Complete NGPM & Phase-II NAGMP [cite: 121]</li>
+                            [cite_start]<li>• Critical Mineral Exploration (on/off-shore) [cite: 121]</li>
+                            [cite_start]<li>• R&D on Li-ion/Sodium-ion battery coal-anodes [cite: 121]</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-900 border-b border-blue-200 mb-2">Medium Term (0-10 Years)</h4>
+                        <ul class="text-sm space-y-2">
+                            [cite_start]<li>• Predictive Geological Mapping [cite: 124]</li>
+                            [cite_start]<li>• Stratigraphic drilling (up to 2km) [cite: 124]</li>
+                            [cite_start]<li>• Create Mineral System map of India [cite: 124]</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-900 border-b border-blue-200 mb-2">Long Term (2047)</h4>
+                        <ul class="text-sm space-y-2">
+                            [cite_start]<li>• Full 3D/4D Map of India [cite: 124]</li>
+                            [cite_start]<li>• Pan-India Magnetotelluric Imaging (IndMAP) [cite: 124]</li>
+                            [cite_start]<li>• National Isotope Evolution view [cite: 124]</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">2. [cite_start]Using Smart Technology & Robots [cite: 125]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Replacing old hammers and maps with Artificial Intelligence (AI), drones, and high-tech sensors[cite: 126, 127].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> Using a drone with a "mineral-detecting camera" to scan a mountain that is too steep for humans to climb[cite: 130].</p>
+            <div id="p2" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">2. Technology-Driven Geoscience Transformation</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Institutional modernization through AI/ML, drones, and advanced analytics. [cite: 125, 126]</p>
+                <div class="easy-read mb-6">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Using computers, robots, and AI to find minerals faster and more accurately than people can alone. [cite: 126]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Using AI to analyze satellite photos and automatically point out where gold or copper might be hidden. [cite: 130]</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-bold mb-2">Key Initiatives (0-5 Years)</h4>
+                        <ul class="list-disc ml-5 text-sm space-y-1">
+                            [cite_start]<li>Setup DPIIC (Center of Excellence for AI/ML) [cite: 130]</li>
+                            [cite_start]<li>GPU-based compute facility for digital twins [cite: 130]</li>
+                            [cite_start]<li>IndiaAI-Geoscience-Hackathon [cite: 130]</li>
+                            [cite_start]<li>Deploy Chatbots and Mobile Apps (Bhuvirasat) [cite: 130]</li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-bold mb-2">Future Tech (10-15 Years)</h4>
+                        <ul class="list-disc ml-5 text-sm space-y-1">
+                            [cite_start]<li>Big Data & Cloud Infrastructure [cite: 130]</li>
+                            [cite_start]<li>AI-driven dynamic Operating Procedures [cite: 130]</li>
+                            [cite_start]<li>Robotics for inaccessible terrain exploration [cite: 130]</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">3. [cite_start]Keeping People Safe [cite: 132]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Predicting landslides and floods before they happen to save lives and homes[cite: 133, 134].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> Setting up an "Early Warning System" in a Himalayan village that sends an alert to people's phones 24 hours before a landslide might happen[cite: 135, 138, 141].</p>
+            <div id="p3" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">3. Public Good and Fundamental Geoscience</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Strengthening research on geohazards, climate change, and early warning systems. [cite: 132, 133]</p>
+                <div class="easy-read mb-6" style="border-left-color: #10b981;">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Using science to save lives and protect the environment from disasters like floods or landslides. [cite: 134]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Sending a warning to a village phone hours before a landslide happens so everyone can move to safety. [cite: 135, 141]</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-bold italic">Safety & Environment</h4>
+                        [cite_start]<p class="text-sm">Regional Landslide Forecasting for all 181 prone districts by 2047. [cite: 141] [cite_start]Monitoring glacial lakes (GLOF) and Carbon Sequestration (CCUS) projects. [cite: 135, 138]</p>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-lg">
+                        <h4 class="font-bold italic">Frontier Research</h4>
+                        [cite_start]<p class="text-sm">Planetary Mapping (Moon/Mars with ISRO), Polar expeditions, and Geoheritage site tours with VR/AR. [cite: 138]</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">4. [cite_start]Learning from the World [cite: 142]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Working with top scientists from countries like the US, Australia, and Canada to share secrets and tools[cite: 143, 147].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> Indian and Australian scientists working together to map the deep ocean floor using the best tech from both nations[cite: 147].</p>
+            <div id="p4" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">4. Global Benchmarking & Strategic Partnerships</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Elevating GSI's stature through international collaboration and standards. [cite: 142, 143]</p>
+                <div class="easy-read mb-6">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Working with the world's best scientists so India always has access to the newest discoveries and tools. [cite: 145]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Partnering with Australian experts to use their advanced drilling technology in Indian deserts. [cite: 147]</p>
+                </div>
+                <ul class="grid md:grid-cols-2 gap-4 text-sm">
+                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Establish India's first "Geoethics Charter" [cite: 147]</li>
+                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Host "Global Geoscience Conclave" [cite: 147]</li>
+                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Regional cooperation under BIMSTEC and IORA [cite: 147]</li>
+                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Deep Geology 'IndPROBE' study [cite: 147]</li>
+                </ul>
+            </div>
+
+            <div id="p5" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">5. Integrated Data Infrastructure & Open Knowledge</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Democratizing geoscience data through digitization and open access. [cite: 149, 151]</p>
+                <div class="easy-read mb-6">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Taking all the paper maps from the last 100 years and putting them online so any student or business can use them. [cite: 152]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> A student using their laptop to download a free 3D geological map for a school project. [cite: 153]</p>
+                </div>
+                <div class="border rounded-lg overflow-hidden">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-blue-100 font-bold">
+                            <tr><th class="p-3 text-left">Initiative</th><th class="p-3 text-left">Timeline</th></tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            [cite_start]<tr><td class="p-3">National Geoscience Data Repository (NGDR)</td><td class="p-3">5 Years [cite: 153]</td></tr>
+                            [cite_start]<tr><td class="p-3">Adoption of FAIR Principles (Easy to find/use data)</td><td class="p-3">5 Years [cite: 153]</td></tr>
+                            [cite_start]<tr><td class="p-3">AI Search (LLM) for Geological reports</td><td class="p-3">5 Years [cite: 160]</td></tr>
+                            [cite_start]<tr><td class="p-3">Publication of 'India's Geoscience Atlas 2047'</td><td class="p-3">2047 [cite: 162]</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">5. [cite_start]Open Data for Everyone [cite: 149]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Taking millions of old paper maps and putting them online so anyone—students or business owners—can use them for free[cite: 151, 152].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> A college student downloading a free 3D map of their hometown to study why certain areas have better groundwater than others[cite: 153, 168].</p>
+            <div id="p6" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">6. Training & Capacity Building</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Upskilling human capital to lead 21st-century geoscientific endeavors. [cite: 173, 174]</p>
+                <div class="easy-read mb-6">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Teaching our staff and young students the newest skills so India always has enough Earth experts. [cite: 175]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Using Virtual Reality headsets to let students "walk" through a volcano or a deep mine safely. [cite: 176]</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div class="p-4 bg-orange-50 rounded-lg">
+                        [cite_start]<p><strong>GSITI Degree Program:</strong> Real university degrees and global training programs. [cite: 176]</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-lg">
+                        [cite_start]<p><strong>UNESCO Recognition:</strong> Becoming a globally recognized "Center of Excellence." [cite: 179]</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-lg">
+                        [cite_start]<p><strong>VR/AR Centre:</strong> Using video-game technology for professional training. [cite: 176]</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-lg">
+                        [cite_start]<p><strong>Geobus:</strong> Mobile science vans visiting schools across India. [cite: 179]</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">6. [cite_start]Teaching the Next Generation [cite: 169]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Training GSI staff and students to become "Earth experts" using Virtual Reality and new degree programs[cite: 172, 174, 176].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> Using a VR headset to "walk" through a volcanic area to learn about rocks without having to travel thousands of miles[cite: 176].</p>
+            <div id="p7" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                <h3 class="text-2xl font-bold text-blue-800 mb-2">7. Policy Intervention</h3>
+                [cite_start]<p class="text-gray-600 mb-4">Positioning GSI as the primary advisor to the nation on geoscientific matters. [cite: 181, 182]</p>
+                <div class="easy-read mb-6">
+                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Ensuring that the government uses actual science when making big decisions about the country's future. [cite: 183]</p>
+                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> GSI scientists helping the government decide the safest path to build a new national highway. [cite: 184]</p>
+                </div>
+                <div class="flex items-center justify-center p-6 border-2 border-dashed border-blue-300 rounded-xl">
+                    [cite_start]<p class="text-center italic">"Embed GSI into strategic planning and global policy forums to achieve the vision of Atmanirbhar Bharat by 2047." [cite: 184]</p>
                 </div>
             </div>
-
-            <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-                <h3 class="text-2xl font-bold text-blue-700 mb-2">7. [cite_start]Helping Government Make Rules [cite: 180]</h3>
-                [cite_start]<p class="text-gray-600"><strong>What it is:</strong> Giving the government scientific proof so they can make better laws about mining and the environment[cite: 181, 182].</p>
-                <div class="example-box">
-                    [cite_start]<p class="text-sm"><strong>Example:</strong> GSI showing a map of "safe areas" to the government so they know exactly where it is safe to build a new highway[cite: 183, 184].</p>
-                </div>
-            </div>
-
         </div>
 
-        <footer class="mt-20 py-10 border-t text-center text-gray-500 text-sm">
-            <p>Summarized from: <strong>Vision 2047 – Geological Survey of India (GSI)</strong></p>
+        <footer class="mt-20 text-center text-gray-500 text-sm border-t pt-8">
+            <p>© 2025 Geological Survey of India - Vision 2047 Strategy Summary</p>
+            <p>Source Material: Vision 2047 – Geological Survey of India (GSI).pdf</p>
         </footer>
     </main>
 
+    <script>
+        function showPillar(id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('#tab-buttons button').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-slate-200');
+            });
+            document.getElementById(id).classList.add('active');
+            const activeBtn = event.currentTarget;
+            activeBtn.classList.remove('bg-slate-200');
+            activeBtn.classList.add('bg-blue-600', 'text-white');
+        }
+    </script>
 </body>
 </html>
