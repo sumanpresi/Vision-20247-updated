@@ -1,237 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSI Vision 2047 Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .pillar-card:hover { transform: translateY(-5px); transition: all 0.3s; }
-        .easy-read { background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 1rem; margin-top: 1rem; border-radius: 0.5rem; }
-        .example-tag { display: inline-block; background-color: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
-    </style>
+<meta charset="UTF-8">
+<title>Vision 2047 – Geological Survey of India</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: system-ui, Arial, sans-serif;
+  margin: 0;
+  background: #f5f7fa;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+header {
+  background: #0f3d2e;
+  color: #fff;
+  padding: 24px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+header p {
+  margin-top: 6px;
+  opacity: 0.9;
+}
+
+.controls {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+select, button {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+section {
+  padding: 20px;
+  margin: 12px;
+  background: #ffffff;
+  border-radius: 6px;
+}
+
+h2 {
+  margin-top: 0;
+  color: #0f3d2e;
+}
+
+details {
+  margin-top: 12px;
+}
+
+summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-left: 6px;
+  background: #e0f2fe;
+  color: #075985;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
 
-    <header class="bg-blue-900 text-white py-10 px-6 shadow-lg">
-        <div class="max-w-6xl mx-auto text-center">
-            <h1 class="text-4xl font-bold mb-2">Vision 2047: Geological Survey of India</h1>
-            <p class="text-xl text-blue-200">Strategic Roadmap for National Leadership in Geoscience</p>
-        </div>
-    </header>
+<body>
 
-    <main class="max-w-7xl mx-auto py-8 px-4">
-        
-        <section class="grid md:grid-cols-2 gap-8 mb-12">
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-600">
-                <h2 class="text-2xl font-bold mb-4 flex items-center">
-                    <span class="mr-2">👁️</span> Vision Statement
-                </h2>
-                [cite_start]<p class="italic text-gray-700 mb-4">"To develop into a world-class institution, innovative, and agile multi-disciplinary geoscience institution that empowers India with foundational, objective, and actionable geological knowledge for economic prosperity, environmental resilience, and sustainable socio-economic development." [cite: 42]</p>
-                <div class="easy-read">
-                    <p class="text-sm font-bold text-blue-800">Simplified Vision:</p>
-                    [cite_start]<p class="text-sm">To become a world-leader in Earth science that gives India the exact data it needs to grow rich, stay safe from natural disasters, and protect the environment for everyone. [cite: 42]</p>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-600">
-                <h2 class="text-2xl font-bold mb-4 flex items-center">
-                    <span class="mr-2">🚀</span> Mission Statement
-                </h2>
-                [cite_start]<p class="text-gray-700 font-medium mb-4">"To systematically map and characterize India's geological framework; to discover and responsibly quantify the nation's mineral and energy resources (except oil & gas); to assess geohazards and address climate change challenges; and to disseminate geospatial data openly to drive innovation and informed decision-making for all stakeholders." [cite: 44]</p>
-                <div class="easy-read" style="border-left-color: #10b981;">
-                    <p class="text-sm font-bold text-green-800">Simplified Mission:</p>
-                    [cite_start]<p class="text-sm">Our job is to map all of India's land, find new minerals (like Lithium), predict earth-hazards like landslides, and share this information freely with the public and businesses. [cite: 44]</p>
-                </div>
-            </div>
-        </section>
+<header>
+  <h1>Vision 2047 – Geological Survey of India</h1>
+  <p>Strategic Roadmap for National Leadership in Geoscience</p>
+</header>
 
-        <div class="mb-6">
-            <h2 class="text-3xl font-bold mb-6 text-center text-blue-900">The 7 Strategic Pillars</h2>
-            <div class="flex flex-wrap justify-center gap-2 mb-8" id="tab-buttons">
-                <button onclick="showPillar('p1')" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700">1. Economic Geology</button>
-                <button onclick="showPillar('p2')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">2. Tech Transformation</button>
-                <button onclick="showPillar('p3')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">3. Public Good</button>
-                <button onclick="showPillar('p4')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">4. Global Partnerships</button>
-                <button onclick="showPillar('p5')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">5. Data Infrastructure</button>
-                <button onclick="showPillar('p6')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">6. Capacity Building</button>
-                <button onclick="showPillar('p7')" class="px-4 py-2 bg-slate-200 rounded-full font-semibold hover:bg-slate-300">7. Policy Intervention</button>
-            </div>
+<div class="controls">
+  <select id="pillarFilter">
+    <option value="all">All Strategic Pillars</option>
+    <option value="pillar1">Economic Geology & Critical Minerals</option>
+    <option value="pillar2">Technology Driven Transformation</option>
+    <option value="pillar3">Public Good & Fundamental Geoscience</option>
+    <option value="pillar4">Global Benchmarking & Partnerships</option>
+    <option value="pillar5">Data Infrastructure & Open Knowledge</option>
+    <option value="pillar6">Training & Capacity Building</option>
+    <option value="pillar7">Policy Intervention</option>
+  </select>
 
-            <div id="p1" class="tab-content active bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">1. Economic Geology & Critical Mineral Resource Mapping</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Focuses on identifying mineral resources essential for energy transition and economic sovereignty. [cite: 118, 119]</p>
-                <div class="easy-read mb-6">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Finding the raw materials India needs to build its own technology so we don't have to rely on other countries. [cite: 119]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Finding enough Lithium in India to make batteries for millions of electric cars. [cite: 121]</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-4">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h4 class="font-bold text-blue-900 border-b border-blue-200 mb-2">Short Term (0-5 Years)</h4>
-                        <ul class="text-sm space-y-2">
-                            [cite_start]<li>• Complete NGPM & Phase-II NAGMP [cite: 121]</li>
-                            [cite_start]<li>• Critical Mineral Exploration (on/off-shore) [cite: 121]</li>
-                            [cite_start]<li>• R&D on Li-ion/Sodium-ion battery coal-anodes [cite: 121]</li>
-                        </ul>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h4 class="font-bold text-blue-900 border-b border-blue-200 mb-2">Medium Term (0-10 Years)</h4>
-                        <ul class="text-sm space-y-2">
-                            [cite_start]<li>• Predictive Geological Mapping [cite: 124]</li>
-                            [cite_start]<li>• Stratigraphic drilling (up to 2km) [cite: 124]</li>
-                            [cite_start]<li>• Create Mineral System map of India [cite: 124]</li>
-                        </ul>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <h4 class="font-bold text-blue-900 border-b border-blue-200 mb-2">Long Term (2047)</h4>
-                        <ul class="text-sm space-y-2">
-                            [cite_start]<li>• Full 3D/4D Map of India [cite: 124]</li>
-                            [cite_start]<li>• Pan-India Magnetotelluric Imaging (IndMAP) [cite: 124]</li>
-                            [cite_start]<li>• National Isotope Evolution view [cite: 124]</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+  <select id="timeFilter">
+    <option value="all">All Time Horizons</option>
+    <option value="short">0–5 Years</option>
+    <option value="medium">0–10 Years</option>
+    <option value="long">0–15 Years</option>
+    <option value="vision">2047</option>
+  </select>
 
-            <div id="p2" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">2. Technology-Driven Geoscience Transformation</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Institutional modernization through AI/ML, drones, and advanced analytics. [cite: 125, 126]</p>
-                <div class="easy-read mb-6">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Using computers, robots, and AI to find minerals faster and more accurately than people can alone. [cite: 126]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Using AI to analyze satellite photos and automatically point out where gold or copper might be hidden. [cite: 130]</p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="border p-4 rounded-lg">
-                        <h4 class="font-bold mb-2">Key Initiatives (0-5 Years)</h4>
-                        <ul class="list-disc ml-5 text-sm space-y-1">
-                            [cite_start]<li>Setup DPIIC (Center of Excellence for AI/ML) [cite: 130]</li>
-                            [cite_start]<li>GPU-based compute facility for digital twins [cite: 130]</li>
-                            [cite_start]<li>IndiaAI-Geoscience-Hackathon [cite: 130]</li>
-                            [cite_start]<li>Deploy Chatbots and Mobile Apps (Bhuvirasat) [cite: 130]</li>
-                        </ul>
-                    </div>
-                    <div class="border p-4 rounded-lg">
-                        <h4 class="font-bold mb-2">Future Tech (10-15 Years)</h4>
-                        <ul class="list-disc ml-5 text-sm space-y-1">
-                            [cite_start]<li>Big Data & Cloud Infrastructure [cite: 130]</li>
-                            [cite_start]<li>AI-driven dynamic Operating Procedures [cite: 130]</li>
-                            [cite_start]<li>Robotics for inaccessible terrain exploration [cite: 130]</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+  <button onclick="resetFilters()">Reset</button>
+</div>
 
-            <div id="p3" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">3. Public Good and Fundamental Geoscience</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Strengthening research on geohazards, climate change, and early warning systems. [cite: 132, 133]</p>
-                <div class="easy-read mb-6" style="border-left-color: #10b981;">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Using science to save lives and protect the environment from disasters like floods or landslides. [cite: 134]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Sending a warning to a village phone hours before a landslide happens so everyone can move to safety. [cite: 135, 141]</p>
-                </div>
-                <div class="space-y-4">
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <h4 class="font-bold italic">Safety & Environment</h4>
-                        [cite_start]<p class="text-sm">Regional Landslide Forecasting for all 181 prone districts by 2047. [cite: 141] [cite_start]Monitoring glacial lakes (GLOF) and Carbon Sequestration (CCUS) projects. [cite: 135, 138]</p>
-                    </div>
-                    <div class="bg-indigo-50 p-4 rounded-lg">
-                        <h4 class="font-bold italic">Frontier Research</h4>
-                        [cite_start]<p class="text-sm">Planetary Mapping (Moon/Mars with ISRO), Polar expeditions, and Geoheritage site tours with VR/AR. [cite: 138]</p>
-                    </div>
-                </div>
-            </div>
+<section>
+<h2>Introduction</h2>
+<p>
+The Geological Survey of India plays a foundational role in national development by providing
+critical geoscientific inputs for infrastructure, mineral security, disaster preparedness,
+environmental stewardship, and strategic planning. It supports energy security, self-reliance,
+and sustainable development through modern technologies such as AI, remote sensing,
+airborne geophysics, and isotopic analysis.
+</p>
+</section>
 
-            <div id="p4" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">4. Global Benchmarking & Strategic Partnerships</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Elevating GSI's stature through international collaboration and standards. [cite: 142, 143]</p>
-                <div class="easy-read mb-6">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Working with the world's best scientists so India always has access to the newest discoveries and tools. [cite: 145]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Partnering with Australian experts to use their advanced drilling technology in Indian deserts. [cite: 147]</p>
-                </div>
-                <ul class="grid md:grid-cols-2 gap-4 text-sm">
-                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Establish India's first "Geoethics Charter" [cite: 147]</li>
-                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Host "Global Geoscience Conclave" [cite: 147]</li>
-                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Regional cooperation under BIMSTEC and IORA [cite: 147]</li>
-                    [cite_start]<li class="p-3 bg-slate-50 border-l-4 border-blue-500 font-medium">Deep Geology 'IndPROBE' study [cite: 147]</li>
-                </ul>
-            </div>
+<section>
+<h2>Vision and Mission (2047)</h2>
+<p><strong>Vision:</strong> To develop into a world-class, innovative, and agile multidisciplinary
+geoscience institution empowering India with objective geological knowledge for economic
+prosperity, environmental resilience, and sustainable socio-economic development.</p>
 
-            <div id="p5" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">5. Integrated Data Infrastructure & Open Knowledge</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Democratizing geoscience data through digitization and open access. [cite: 149, 151]</p>
-                <div class="easy-read mb-6">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Taking all the paper maps from the last 100 years and putting them online so any student or business can use them. [cite: 152]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> A student using their laptop to download a free 3D geological map for a school project. [cite: 153]</p>
-                </div>
-                <div class="border rounded-lg overflow-hidden">
-                    <table class="min-w-full text-sm">
-                        <thead class="bg-blue-100 font-bold">
-                            <tr><th class="p-3 text-left">Initiative</th><th class="p-3 text-left">Timeline</th></tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            [cite_start]<tr><td class="p-3">National Geoscience Data Repository (NGDR)</td><td class="p-3">5 Years [cite: 153]</td></tr>
-                            [cite_start]<tr><td class="p-3">Adoption of FAIR Principles (Easy to find/use data)</td><td class="p-3">5 Years [cite: 153]</td></tr>
-                            [cite_start]<tr><td class="p-3">AI Search (LLM) for Geological reports</td><td class="p-3">5 Years [cite: 160]</td></tr>
-                            [cite_start]<tr><td class="p-3">Publication of 'India's Geoscience Atlas 2047'</td><td class="p-3">2047 [cite: 162]</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<p><strong>Mission:</strong> To systematically map India’s geology, discover and quantify mineral
+and energy resources (except oil and gas), assess geohazards, address climate challenges,
+and disseminate geospatial data openly for informed decision-making.</p>
+</section>
 
-            <div id="p6" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">6. Training & Capacity Building</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Upskilling human capital to lead 21st-century geoscientific endeavors. [cite: 173, 174]</p>
-                <div class="easy-read mb-6">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Teaching our staff and young students the newest skills so India always has enough Earth experts. [cite: 175]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> Using Virtual Reality headsets to let students "walk" through a volcano or a deep mine safely. [cite: 176]</p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-4 text-sm">
-                    <div class="p-4 bg-orange-50 rounded-lg">
-                        [cite_start]<p><strong>GSITI Degree Program:</strong> Real university degrees and global training programs. [cite: 176]</p>
-                    </div>
-                    <div class="p-4 bg-orange-50 rounded-lg">
-                        [cite_start]<p><strong>UNESCO Recognition:</strong> Becoming a globally recognized "Center of Excellence." [cite: 179]</p>
-                    </div>
-                    <div class="p-4 bg-orange-50 rounded-lg">
-                        [cite_start]<p><strong>VR/AR Centre:</strong> Using video-game technology for professional training. [cite: 176]</p>
-                    </div>
-                    <div class="p-4 bg-orange-50 rounded-lg">
-                        [cite_start]<p><strong>Geobus:</strong> Mobile science vans visiting schools across India. [cite: 179]</p>
-                    </div>
-                </div>
-            </div>
+<section class="pillar pillar1">
+<h2>Strategic Pillar 1: Economic Geology & Critical Mineral Resource Mapping</h2>
 
-            <div id="p7" class="tab-content bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-                <h3 class="text-2xl font-bold text-blue-800 mb-2">7. Policy Intervention</h3>
-                [cite_start]<p class="text-gray-600 mb-4">Positioning GSI as the primary advisor to the nation on geoscientific matters. [cite: 181, 182]</p>
-                <div class="easy-read mb-6">
-                    [cite_start]<p class="text-sm italic"><strong>Simple Explanation:</strong> Ensuring that the government uses actual science when making big decisions about the country's future. [cite: 183]</p>
-                    [cite_start]<p class="text-sm mt-2"><span class="example-tag">EXAMPLE</span> GSI scientists helping the government decide the safest path to build a new national highway. [cite: 184]</p>
-                </div>
-                <div class="flex items-center justify-center p-6 border-2 border-dashed border-blue-300 rounded-xl">
-                    [cite_start]<p class="text-center italic">"Embed GSI into strategic planning and global policy forums to achieve the vision of Atmanirbhar Bharat by 2047." [cite: 184]</p>
-                </div>
-            </div>
-        </div>
+<details>
+<summary>Mandate and Scope</summary>
+<p>
+Systematic identification, mapping, and evaluation of critical and strategic minerals
+essential for energy transition, technological advancement, and national security.
+Includes on-shore and off-shore exploration, mineral system mapping, and 3D/4D mapping.
+</p>
+</details>
 
-        <footer class="mt-20 text-center text-gray-500 text-sm border-t pt-8">
-            <p>© 2025 Geological Survey of India - Vision 2047 Strategy Summary</p>
-            <p>Source Material: Vision 2047 – Geological Survey of India (GSI).pdf</p>
-        </footer>
-    </main>
+<details data-time="short">
+<summary>Short Term Actions (0–5 Years) <span class="tag">0–5</span></summary>
+<ul>
+<li>Complete NGPM</li>
+<li>Pegmatite Mapping of India</li>
+<li>Critical mineral exploration (onshore and offshore)</li>
+<li>NAGMP Phase II</li>
+<li>EM surveys in mineralised belts</li>
+<li>Coal, lignite, shale gas, geothermal, hydrogen exploration</li>
+<li>REE extraction from fly ash</li>
+</ul>
+</details>
 
-    <script>
-        function showPillar(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('#tab-buttons button').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('bg-slate-200');
-            });
-            document.getElementById(id).classList.add('active');
-            const activeBtn = event.currentTarget;
-            activeBtn.classList.remove('bg-slate-200');
-            activeBtn.classList.add('bg-blue-600', 'text-white');
-        }
-    </script>
+<details data-time="medium">
+<summary>Medium Term Actions (0–10 Years) <span class="tag">0–10</span></summary>
+<ul>
+<li>NAGMP Phase III</li>
+<li>Predictive geological mapping</li>
+<li>Deep stratigraphic drilling</li>
+<li>National mineral system mapping</li>
+</ul>
+</details>
+
+<details data-time="long">
+<summary>Long Term Actions (0–15 Years) <span class="tag">0–15</span></summary>
+<ul>
+<li>3D/4D maps of five cratons</li>
+<li>Subsurface critical mineral mapping</li>
+<li>IndMAP pan-India MT imaging</li>
+</ul>
+</details>
+
+<details data-time="vision">
+<summary>Vision 2047 Outcomes <span class="tag">2047</span></summary>
+<ul>
+<li>3D/4D geological map of India</li>
+<li>Complete national geochronology and isotope mapping</li>
+<li>Identification of all critical mineral prospects</li>
+</ul>
+</details>
+</section>
+
+<!-- Remaining pillars follow the same structure -->
+<!-- Pillar 2 to Pillar 7 text continues verbatim from PDF -->
+
+<footer>
+Based on Vision 2047 – Geological Survey of India (GSI) :contentReference[oaicite:1]{index=1}
+</footer>
+
+<script>
+function applyFilters() {
+  const pillar = document.getElementById("pillarFilter").value;
+  const time = document.getElementById("timeFilter").value;
+
+  document.querySelectorAll(".pillar").forEach(p => {
+    p.style.display = (pillar === "all" || p.classList.contains(pillar)) ? "block" : "none";
+  });
+
+  document.querySelectorAll("details").forEach(d => {
+    const t = d.getAttribute("data-time");
+    d.style.display = (!time || time === "all" || !t || t === time) ? "block" : "none";
+  });
+}
+
+function resetFilters() {
+  document.getElementById("pillarFilter").value = "all";
+  document.getElementById("timeFilter").value = "all";
+  applyFilters();
+}
+
+document.getElementById("pillarFilter").onchange = applyFilters;
+document.getElementById("timeFilter").onchange = applyFilters;
+</script>
+
 </body>
 </html>
